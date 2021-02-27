@@ -4,10 +4,13 @@ import reportWebVitals from './reportWebVitals';
 import Router from './Router';
 import 'antd/dist/antd.css'
 import './index.css';
+import { AuthProvider } from './hooks/authContext'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router />
+    <AuthProvider>
+      <Router />
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
