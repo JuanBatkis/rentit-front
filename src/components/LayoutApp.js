@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Layout, Menu, Drawer, Button, Typography, Row, Col } from 'antd'
+import { Layout, Menu, Drawer, Button, Typography, Row, Col, Image } from 'antd'
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer } = Layout
@@ -38,7 +38,12 @@ function LayoutApp({children}) {
             </Drawer>
           </Col>
           <Col span={4} align="middle">
-            <Title>RENTIT</Title>
+            {/* <Title>RENTIT</Title> */}
+            <img
+              alt="RENTIT"
+              src="https://res.cloudinary.com/djv6xyyqp/image/upload/v1614452197/rentit/images/rentit-logoRecurso_8_1x_dc0e8o.png"
+              style={{maxHeight: '44px'}}
+            />
           </Col>
           <Col span={4} align="right">col-4</Col>
         </Row>

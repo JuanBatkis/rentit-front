@@ -42,7 +42,9 @@ body {
 }
 
 .ant-layout-header {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.75);
+  position: absolute;
+    width: 100%;
 }
 
 .ant-drawer-body {

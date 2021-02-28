@@ -1,5 +1,5 @@
 #main-banner {
-  height: calc(100vh - 64px);
+  height: calc(100vh - 0px);
   background: rgb(0,161,186);
   background: linear-gradient(45deg, rgba(0,161,186,1) 0%, rgba(156,216,115,1) 100%);
 
@@ -14,6 +14,6 @@
 
   iframe {
     opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 2s;
   }
 }
