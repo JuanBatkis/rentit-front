@@ -1,0 +1,23 @@
+#root .ant-layout-header {
+  background-color: #fff;
+}
+
+.main-row{
+  min-height: inherit;
+  background: rgb(0,161,186);
+  background: linear-gradient(45deg, rgba(0,161,186,1) 0%, rgba(156,216,115,1) 100%);
+
+  > .ant-col{
+    background-color: #fff;
+    padding: 60px 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px 0 #00000040;
+
+    h1.ant-typography {
+      display: inline-block;
+      font-size: 4em;
+      pointer-events: none;
+      user-select: none;
+    }
+  }
+}

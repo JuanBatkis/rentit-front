@@ -1,6 +1,8 @@
-import {Form, Typography, Col, Row, Button, Input} from 'antd'
 import React from 'react'
 import { useAuthInfo } from "../hooks/authContext"
+import {Form, Typography, Col, Row, Button, Input} from 'antd'
+import { Gradient } from 'react-gradient'
+import '../styles/auth.scss'
 
 const { Title } = Typography
 
@@ -13,9 +15,19 @@ function Login() {
   }
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={{ span: 8, offset: 8 }}>
-        <Title level={1}>Login</Title>
+    <Row justify="center" align="middle" className="main-row">
+      <Col xs={22} sm={18} md={14} lg={10} xl={6} xxl={5}>
+        <Gradient
+          gradients={[
+            ['#00a1ba ', '#9cd873 '],
+          ]}
+          property="text"
+          element="h1"
+          angle="45deg"
+          className="text ant-typography"
+        >
+          Login
+        </Gradient>
         <Form form={form} onFinish={handleSubmit} layout='vertical'>
           <Form.Item name='email' label='Email:'>
             <Input type='email' />

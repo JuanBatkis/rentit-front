@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react'
-import {Typography, Col, Row, Button} from 'antd'
+import React, { useRef } from 'react'
+import {Typography, Col, Row} from 'antd'
 import '../styles/home.scss'
 
 const { Title } = Typography
@@ -23,20 +23,13 @@ function Home() {
             A new way to get what you need
           </Title>
         </Col>
-        <Col span={15} className='full-heigh'>
+        <Col span={15} className='full-heigh iframe-container'>
           <div
+            id='iframeCover'
             ref={divRef}
-            style={{
-              backgroundImage: 'url(https://res.cloudinary.com/djv6xyyqp/image/upload/v1614452805/rentit/images/floating_oszbj8.png)',
-              backgroundPosition: 'center',
-              position: 'absolute',
-              height: '100%',
-              width: '100%',
-              opacity: '1',
-              transition: 'opacity 2s'
-            }}
+            style={{ opacity: '1' }}
           ></div>
-          <iframe src='https://my.spline.design/floating-adbb8c927f6e8e69a180701a9fb2ad6c/' 
+          <iframe src='https://my.spline.design/floating-adbb8c927f6e8e69a180701a9fb2ad6c/'
             frameBorder='0'
             width='100%'
             height='100%'

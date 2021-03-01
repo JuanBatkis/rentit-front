@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Layout, Menu, Drawer, Button, Typography, Row, Col, Image } from 'antd'
-import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Layout, Menu, Drawer, Button, Row, Col, Tooltip } from 'antd'
+import { MenuOutlined, PlusOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons'
 
 const { Header, Content, Footer } = Layout
-const { Title } = Typography
 
 function LayoutApp({children}) {
 
@@ -38,14 +38,26 @@ function LayoutApp({children}) {
             </Drawer>
           </Col>
           <Col span={4} align="middle">
-            {/* <Title>RENTIT</Title> */}
-            <img
-              alt="RENTIT"
-              src="https://res.cloudinary.com/djv6xyyqp/image/upload/v1614452197/rentit/images/rentit-logoRecurso_8_1x_dc0e8o.png"
-              style={{maxHeight: '44px'}}
-            />
+            <Link to='/'>
+              <img
+                alt="RENTIT"
+                src="https://res.cloudinary.com/djv6xyyqp/image/upload/v1614452197/rentit/images/rentit-logoRecurso_8_1x_dc0e8o.png"
+                style={{maxHeight: '44px'}}
+              />
+            </Link>
           </Col>
-          <Col span={4} align="right">col-4</Col>
+          <Col span={4} align="right">
+            <Tooltip placement="bottom" title={'Cart'}>
+              <Link to='/cart'>
+                <ShoppingCartOutlined style={{fontSize: '1.6em', color: 'rgba(0, 0, 0, 0.85)', marginRight: '20px'}} />
+              </Link>              
+            </Tooltip>
+            <Tooltip placement="bottom" title={'Login/Signup'}>
+              <Link to='/login'>
+                <UserOutlined style={{fontSize: '1.5em', color: 'rgba(0, 0, 0, 0.85)'}} />
+              </Link>
+            </Tooltip>
+          </Col>
         </Row>
       </Header>
       <Content>
@@ -53,7 +65,7 @@ function LayoutApp({children}) {
           {children}
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+      <Footer style={{ textAlign: 'center' }}>RENTIT ©2020 Created by <a href="https://github.com/JuanBatkis" target="_blank">Juan Batkis <span style={{fontSize: '1.2em'}}>👋</span></a></Footer>
     </Layout>
   )
 }
