@@ -1,7 +1,7 @@
 import { createContext, useEffect, useContext } from "react"
 import useLocalStorage from "./useLocalStorage"
 import { getCurrentUser, loginFn, logoutFn } from "../services/auth"
-import { message } from "antd"
+import { notification } from "antd"
 
 const AuthContext = createContext()
 
@@ -15,10 +15,24 @@ export const AuthProvider = props => {
     try {
       const { data } = await loginFn(user)
       setUser(data)
+      notification['success']({
+        message: `Hello ${data.firstName}!`,
+        description: 'Thank you for logging in 🙌',
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
     } catch (error) {
-      message.error(error.response.data.message)
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
     }
-    //TODO: Ver que devuelve res cuando exista un error y complementar el codigo
   }
 
   async function logout() {

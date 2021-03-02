@@ -1,25 +1,29 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useAuthInfo } from "../hooks/authContext"
-import {Form, Typography, Col, Row, Button, Input} from 'antd'
+//import {  } from '../services/auth'
+import { Form, Col, Row, Button, Input, Divider, Typography } from 'antd'
 import { Gradient } from 'react-gradient'
+import { GoogleOutlined, FacebookOutlined } from '@ant-design/icons'
 import '../styles/auth.scss'
 
-const { Title } = Typography
+const { Text } = Typography;
 
 function Login() {
   const [form] = Form.useForm()
   const { login } = useAuthInfo()
 
   function handleSubmit(userInfo) {
+    console.log('1');
     login(userInfo)
   }
 
   return (
     <Row justify="center" align="middle" className="main-row">
-      <Col xs={22} sm={18} md={14} lg={10} xl={6} xxl={5}>
+      <Col xs={22} sm={18} md={14} lg={10} xl={8} xxl={6}>
         <Gradient
           gradients={[
-            ['#00a1ba ', '#9cd873 '],
+            ['#00a1ba', '#9cd873'],
           ]}
           property="text"
           element="h1"
@@ -35,10 +39,28 @@ function Login() {
           <Form.Item name='password' label='Password:'>
             <Input.Password />
           </Form.Item>
-          <Button type='primary' htmlType='submit' block size='large'>
-            Login
+          <Button type='primary' htmlType='submit' block size='large' shape="round">
+            Log me in!
           </Button>
         </Form>
+        <Divider id="socialDivider">Or connect with</Divider>
+        <Row justify="center" align="middle" className="socialLogin">
+          <Col span={6} align="middle">
+            <a href="http://localhost:3001/auth/google">
+              <GoogleOutlined />
+            </a>
+          </Col>
+          <Col span={6} align="middle">
+            <a href="http://localhost:3001/auth/facebook">
+              <FacebookOutlined />
+            </a>
+          </Col>
+          <Col span={24} align="middle" className="changeAuth">
+            <Text>
+              Don't have an account? <Link to='/signup'>Sign up here!</Link>
+            </Text>
+          </Col>
+        </Row>
       </Col>
     </Row>
   )

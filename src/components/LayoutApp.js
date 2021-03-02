@@ -7,13 +7,13 @@ const { Header, Content, Footer } = Layout
 
 function LayoutApp({children}) {
 
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
   const showDrawer = () => {
-    setVisible(true);
-  };
+    setVisible(true)
+  }
   const onClose = () => {
-    setVisible(false);
-  };
+    setVisible(false)
+  }
 
   return (
     <Layout className="layout">
