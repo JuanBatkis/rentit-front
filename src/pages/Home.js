@@ -4,13 +4,11 @@ import '../styles/home.scss'
 
 const { Title } = Typography
 
-function Home() {
+const Home = () => {
   const iframeRef = useRef()
   const divRef = useRef()
 
   const showIframe = () => {
-    /* console.log(iframeRef.current.childNodes)
-    console.log(document.querySelector('.spline-watermark')) */
     iframeRef.current.style.opacity = '1'
     divRef.current.style.opacity = '0'
   };

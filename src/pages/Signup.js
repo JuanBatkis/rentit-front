@@ -8,7 +8,7 @@ import '../styles/auth.scss'
 
 const { Text } = Typography;
 
-function Signup() {
+const Signup = () => {
   const [form] = Form.useForm()
 
   async function handleSubmit(userInfo) {
@@ -73,7 +73,7 @@ function Signup() {
           <Form.Item name='password' label='Password:'>
             <Input.Password />
           </Form.Item>
-          <Form.Item name='confirmPassword' label='Conform password:'>
+          <Form.Item name='confirmPassword' label='Confirm password:'>
             <Input.Password />
           </Form.Item>
           <Button type='primary' htmlType='submit' block size='large' shape="round">

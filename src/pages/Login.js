@@ -9,12 +9,11 @@ import '../styles/auth.scss'
 
 const { Text } = Typography;
 
-function Login() {
+const Login = () => {
   const [form] = Form.useForm()
   const { login } = useAuthInfo()
 
-  function handleSubmit(userInfo) {
-    console.log('1');
+  const handleSubmit = (userInfo) => {
     login(userInfo)
   }
 
