@@ -50,7 +50,7 @@ span.ant-input-affix-wrapper > input.ant-input {
 }
 
 .site-layout-content {
-  min-height: calc(100vh - 74px);
+  min-height: calc(100vh - 64px - 74px);
   padding: 0;
   background: #fff;
   overflow: hidden;
@@ -68,11 +68,14 @@ span.ant-input-affix-wrapper > input.ant-input {
 }
 
 .ant-layout-header {
-  background: rgba(255, 255, 255, 0.75);
-  position: absolute;
+  background-color: #fff;
   width: 100%;
 }
 
 .ant-drawer-body {
   padding: 24px 0;
+}
+
+.ant-popover .ant-popover-title {
+  padding: 10px 16px 8px;
 }

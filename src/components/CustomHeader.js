@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuthInfo } from '../hooks/authContext'
-import { Menu, Drawer, Button, Row, Col, Tooltip, Avatar, Popover, Modal } from 'antd'
+import { Menu, Drawer, Button, Row, Col, Tooltip, Avatar, Popover, Modal, Input } from 'antd'
 import { MenuOutlined, PlusOutlined, ShoppingCartOutlined, UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+
+const { Search } = Input;
 
 const CustomHeader = () => {
   const {user, logout} = useAuthInfo()
@@ -33,6 +35,8 @@ const CustomHeader = () => {
     })
   }
 
+  const onSearch = value => console.log(value)
+
   return (
     <Row justify="space-between"  align="middle">
       <Col span={4}>
@@ -62,20 +66,27 @@ const CustomHeader = () => {
           />
         </Link>
       </Col>
-      <Col span={4} align="right">
-        <Tooltip placement="bottom" title={'Cart'}>
+      <Col span={4} align="right" style={{display: 'flex'}}>
+        {/* <Tooltip placement="bottom" title={'Cart'}>
           <Link to='/cart'>
             <ShoppingCartOutlined style={{fontSize: '1.6em', color: 'rgba(0, 0, 0, 0.85)', marginRight: '20px'}} />
-          </Link>              
-        </Tooltip>
+          </Link>
+        </Tooltip> */}
+        <Search placeholder="input search text" allowClear onSearch={onSearch} style={{ width: 'calc(100% - 32px)', paddingRight: '10px' }} />
         {user ? (
           <Popover 
             placement="bottomRight" 
             title={<span>{`${user.firstName}  ${user.lastName}`}</span>} 
             content={
-              <Button type="text" onClick={showConfirm}>
-                Log out
-              </Button>
+              <>
+                <Button  type="text">
+                  <Link to='/profile'>Profile</Link>
+                </Button>
+                <br/>
+                <Button  type="text" onClick={showConfirm}>
+                  Log out
+                </Button>
+              </>
             } 
             trigger="click"
             visible={visiblePopover}
@@ -100,8 +111,8 @@ const CustomHeader = () => {
           </Popover>
         ) : (
           <Tooltip placement="bottom" title={'Login/Signup'}>
-            <Link to='/login'>
-              <UserOutlined style={{fontSize: '1.5em', color: 'rgba(0, 0, 0, 0.85)'}} />
+            <Link to='/login' style={{display: 'flex', alignItems: 'center'}}>
+              <UserOutlined style={{fontSize: '1.6em', color: 'rgba(0, 0, 0, 0.85)'}} />
             </Link>
           </Tooltip>
         )}

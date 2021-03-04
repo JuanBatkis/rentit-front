@@ -1,10 +1,11 @@
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import LayoutApp from './components/LayoutApp'
+import PrivateRoute from './components/PrivateRoute'
+import LoggedOutRoute from './components/LoggedOutRoute'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-
-const Profile = () => <h1>Profile</h1>
+import Profile from './pages/Profile'
 
 function Router() {
   return (
@@ -12,9 +13,9 @@ function Router() {
       <LayoutApp>
         <Switch>
           <Route component={Home} path='/' exact/>
-          <Route component={Signup} path='/signup'/>
-          <Route component={Login} path='/login'/>
-          <Route component={Profile} path='/profile'/>
+          <LoggedOutRoute component={Signup} path='/signup'/>
+          <LoggedOutRoute component={Login} path='/login'/>
+          <PrivateRoute component={Profile} path='/profile'/>
         </Switch>
       </LayoutApp>
     </BrowserRouter>

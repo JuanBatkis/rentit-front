@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { signupFn } from "../services/auth"
 import { Form, Col, Row, Button, Input, Divider, Typography, notification } from 'antd'
 import { Gradient } from 'react-gradient'
@@ -22,6 +22,7 @@ const Signup = () => {
           borderRadius: '20px'
         }
       })
+      return <Redirect to='/login' />
     } catch (error) {
       notification['error']({
         message: 'Something went wrong',
@@ -35,7 +36,7 @@ const Signup = () => {
   }
 
   return (
-    <Row justify="center" align="middle" className="main-row" style={{marginTop: '64px', padding: '30px 0'}}>
+    <Row justify="center" align="middle" className="main-row">
       <Col xs={22} sm={18} md={14} lg={10} xl={8} xxl={6}>
         <Gradient
           gradients={[

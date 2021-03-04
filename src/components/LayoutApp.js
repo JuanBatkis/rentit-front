@@ -1,12 +1,23 @@
+import { useLocation } from 'react-router-dom'
 import CustomHeader from './CustomHeader'
 import { Layout } from 'antd'
 
 const { Header, Content, Footer } = Layout
 
 const LayoutApp = ({children}) => {
+  const location = useLocation()
+  let headerStyle
+
+  if (location.pathname === '/') {
+    headerStyle = {
+      /* background: 'rgba(255, 255, 255, 0.75)', */
+      position: 'absolute'
+    }
+  }
+
   return (
     <Layout className="layout">
-      <Header>
+      <Header style={headerStyle}>
         <CustomHeader />
       </Header>
       <Content>
