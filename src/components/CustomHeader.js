@@ -6,7 +6,7 @@ import { MenuOutlined, PlusOutlined, ShoppingCartOutlined, UserOutlined, Exclama
 
 const { Search } = Input;
 
-const CustomHeader = () => {
+const CustomHeader = ({push}) => {
   const {user, logout} = useAuthInfo()
   const [visibleDrawer, setVisibleDrawer] = useState(false)
   const [visiblePopover, setVisiblePopover] = useState(false)
@@ -24,13 +24,13 @@ const CustomHeader = () => {
   }
 
   const showConfirm = () => {
-    setVisiblePopover(false)
+    showPopover(false)
     confirm({
       icon: <ExclamationCircleOutlined />,
       content: <h3>Are you sure you want to log out?</h3>,
       maskClosable: true,
       onOk() {
-        logout()
+        logout(push)
       }
     })
   }
@@ -79,7 +79,7 @@ const CustomHeader = () => {
             title={<span>{`${user.firstName}  ${user.lastName}`}</span>} 
             content={
               <>
-                <Button  type="text">
+                <Button  type="text" onClick={() => showPopover(false)}>
                   <Link to='/profile'>Profile</Link>
                 </Button>
                 <br/>
@@ -105,7 +105,7 @@ const CustomHeader = () => {
                   cursor: 'pointer'
                 }}
               >
-                {user.firstName[0]}{user.lastName[0]}
+                {`${user.firstName[0]}${user.lastName[0]}`}
               </Avatar>
             )}
           </Popover>

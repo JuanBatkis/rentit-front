@@ -1,10 +1,11 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import CustomHeader from './CustomHeader'
 import { Layout } from 'antd'
 
 const { Header, Content, Footer } = Layout
 
 const LayoutApp = ({children}) => {
+  const {push} = useHistory()
   const location = useLocation()
   let headerStyle
 
@@ -18,7 +19,7 @@ const LayoutApp = ({children}) => {
   return (
     <Layout className="layout">
       <Header style={headerStyle}>
-        <CustomHeader />
+        <CustomHeader push={push} />
       </Header>
       <Content>
         <div className="site-layout-content">

@@ -1,0 +1,50 @@
+.profile-row {
+  padding-left: 16px;
+  padding-right: 16px;
+
+  .profile-cont {
+    height: 100%;
+
+    .ant-avatar .ant-avatar-string {
+      font-size: 3em;
+    }
+
+    &.side-menu-cont {
+      .ant-list {
+        margin-top: 20px;
+
+        .ant-btn {
+          margin-top: 0px;
+        }
+      }
+    }
+
+    &.info-cont {
+      .user-info-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5em;
+
+        .user-score {
+          margin-left: 20px;
+
+          h5 {
+            line-height: 1;
+          }
+        }
+
+        h5, h1 {
+          margin-bottom: 0;
+        }
+      }
+
+      .ant-divider-horizontal {
+        margin: 18px 0;
+      }
+
+      h2.ant-typography {
+        margin-top: 0;
+      }
+    }
+  }
+}

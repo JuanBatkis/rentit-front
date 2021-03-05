@@ -1,6 +1,5 @@
 import React, { useRef } from 'react'
 import {Typography, Col, Row} from 'antd'
-import '../styles/home.scss'
 
 const { Title } = Typography
 

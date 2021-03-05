@@ -1,5 +1,4 @@
 import { createContext, useEffect, useContext } from "react"
-/* import { Redirect } from 'react-router-dom' */
 import useLocalStorage from "./useLocalStorage"
 import { getCurrentUser, loginFn, logoutFn } from "../services/auth"
 import { notification } from "antd"
@@ -36,10 +35,10 @@ export const AuthProvider = props => {
     }
   }
 
-  async function logout() {
+  async function logout(push) {
+    push('/')
     await logoutFn()
     setUser(null)
-    /* return <Redirect to='/' /> */
   }
 
   useEffect(() => {
