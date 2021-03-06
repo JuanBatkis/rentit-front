@@ -17,7 +17,7 @@ const Login = () => {
   }
 
   return (
-    <Row justify="center" align="middle" className="main-row">
+    <Row justify="center" align="middle" className="main-row auth-cont">
       <Col xs={22} sm={18} md={14} lg={10} xl={8} xxl={6}>
         <div>
           <Gradient

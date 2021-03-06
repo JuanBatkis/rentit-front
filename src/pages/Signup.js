@@ -36,7 +36,7 @@ const Signup = () => {
   }
 
   return (
-    <Row justify="center" align="middle" className="main-row">
+    <Row justify="center" align="middle" className="main-row auth-cont">
       <Col xs={22} sm={18} md={14} lg={10} xl={8} xxl={6}>
         <div>
           <Gradient
@@ -58,12 +58,12 @@ const Signup = () => {
               <Col span={12}>
                 <Form.Item name='firstName' label='First name:'>
                   <Input />
-                </Form.Item>              
+                </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item name='lastName' label='Last name:'>
                   <Input />
-                </Form.Item>              
+                </Form.Item>
               </Col>
             </Row>
             <Form.Item name='storeName' label='Store name:'>

@@ -4,6 +4,12 @@
   background: linear-gradient(45deg, rgba(0,161,186,1) 0%, rgba(156,216,115,1) 100%);
   padding: 30px 0;
 
+  &.auth-cont {
+    .ant-btn {
+      margin-top: 20px;
+    }
+  }
+
   > .ant-col > div{
     background-color: #fff;
     padding: 50px 30px 40px 30px;
@@ -15,10 +21,6 @@
       font-size: 4em;
       pointer-events: none;
       user-select: none;
-    }
-
-    .ant-btn {
-      margin-top: 20px;
     }
   
     #socialDivider.ant-divider {

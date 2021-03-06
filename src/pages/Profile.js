@@ -1,5 +1,7 @@
 import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
 import Info from './profile-subroutes/Info'
+import Products from './profile-subroutes/Products'
+import AddProduct from './profile-subroutes/AddProduct'
 import { useAuthInfo } from '../hooks/authContext'
 import { Row, Col, Avatar, List, Button } from 'antd'
 
@@ -56,7 +58,8 @@ const Profile = () => {
             <Route component={Info} path={path} exact />
             <Route component={() => 'Rents'} path={`${path}/rents`} />
             <Route component={() => 'Questions'} path={`${path}/questions`} />
-            <Route component={() => 'Products'} path={`${path}/products`} />
+            <Route component={Products} path={`${path}/products`} exact />
+            <Route component={AddProduct} path={`${path}/products/add`} />
           </Switch>
         </div>
       </Col>
