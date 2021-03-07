@@ -85,10 +85,14 @@ const Signup = () => {
           <Divider id="socialDivider">Or connect with</Divider>
           <Row justify="center" align="middle" className="socialLogin">
             <Col span={6} align="middle">
-              <GoogleOutlined />
+              <a href="/api/auth/google">
+                <GoogleOutlined />
+              </a>
             </Col>
             <Col span={6} align="middle">
-              <FacebookOutlined />
+              <a href="/api/auth/facebook">
+                <FacebookOutlined />
+              </a>
             </Col>
             <Col span={24} align="middle" className="changeAuth">
               <Text>

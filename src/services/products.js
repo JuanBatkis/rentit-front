@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const baseURL =
-  process.env.NODE_ENV === "production" ? "/product" : "http://localhost:3001/product"
+  process.env.NODE_ENV === "production" ? "/api/product" : "http://localhost:3001/api/product"
 
 const _axios = axios.create({
   baseURL,

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { useAuthInfo } from '../../hooks/authContext'
 import { getUserProducts } from '../../services/products'
 import { deleteProduct } from '../../services/products'
-import { Typography, Divider, Table, Space, Skeleton, Button, Tag } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { Typography, Divider, Table, Space, Skeleton, Button, Tag, Popconfirm } from 'antd'
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { Gradient } from 'react-gradient'
 import DetailedRating from '../../components/DetailedRating'
 
@@ -68,16 +68,25 @@ const Info = () => {
     {
       title: 'Action',
       key: '_id',
+      align: 'center',
       render: prod => {
         console.log(prod._id);
         return(
           <Space size="middle">
-            <Button type="link">
-              Edit
+            <Button type="link" size={'large'}>
+              <EditOutlined />
             </Button>
-            <Button type="link" onClick={() => deleteProductAndReload(prod._id)}>
-              Delete
-            </Button>
+            <Popconfirm
+              title="Are you sure to delete this product?"
+              placement="topRight"
+              onConfirm={() => deleteProductAndReload(prod._id)}
+              okText="Delete"
+              cancelText="Cancel"
+            >
+              <Button type="link" danger size={'large'}>
+                <DeleteOutlined />
+              </Button>
+            </Popconfirm>
           </Space>
         )
       },
