@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
+$primary_color: #5dbe8c;
+$primary_hover: #73c89c;
+$radius: 20px;
+
+::-moz-selection { /* Code for Firefox */
+  color: #fff;
+  background: #00a1ba;
+}
+
+::selection {
+  color: #fff;
+  background: #00a1ba;
+}
+
+/* body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+ */
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* h1, h2, h3, h4, h5, h6 {
+  font-family: 'Comfortaa', cursive;
+} */
+
+input.ant-input {
+  border-radius: $radius;
+  padding: 4px 15px;
+}
+span.ant-input-affix-wrapper {
+  border-radius: 50px;
+}
+span.ant-input-affix-wrapper > input.ant-input {
+  padding: 0 5px;
+}
+
+.full-heigh {
+  height: 100%;
+}
+
+.site-layout-content {
+  min-height: calc(100vh - 64px - 74px);
+  padding: 0;
+  background: #fff;
+  overflow: hidden;
+}
+#components-layout-demo-top .logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: rgba(255, 255, 255, 0.3);
+}
+.ant-row-rtl #components-layout-demo-top .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
+}
+
+.ant-layout-header {
+  background-color: #fff;
+  width: 100%;
+}
+
+.ant-drawer-body {
+  padding: 24px 0;
+}
+
+.ant-popover .ant-popover-title {
+  padding: 10px 16px 8px;
+}
+
+.ant-btn-primary {
+  background: $primary_color;
+  border-color: $primary_color;
+}
+.ant-btn-primary:hover, .ant-btn-primary:focus {
+  background: $primary_hover;
+  border-color: $primary_hover;
+}
+
+a, .ant-btn-link, .ant-typography a {
+  color: $primary_color;
+  //font-weight: 600;
+
+  &:hover {
+    color: $primary_hover;
+  }
+}
+
+.ant-input {
+  border-radius: $radius;
+  padding: 4px 15px;
+}
+.ant-input-number {
+  border-radius: $radius;
+  padding: 0px 5px;
+  overflow: hidden;
+
+  .ant-input-number-handler-wrap {
+    width: 25px;
+
+    .ant-input-number-handler {
+      .anticon {
+        padding-right: 4px;
+      }
+
+      &:hover {
+        .ant-input-number-handler-up-inner, .ant-input-number-handler-down-inner {
+          color: $primary_hover;
+        }
+      }
+    }
+  }
+}
+.ant-input-textarea .ant-input {
+  border-radius: $radius;
+  padding: 10px 15px;
+}
+.ant-input:hover, .ant-input-number:hover {
+  border-color: $primary_hover;
+}
+.ant-input:focus, .ant-input-number-focused {
+  border-color: $primary_hover;
+  -webkit-box-shadow: 0 0 0 2px rgba(115, 200, 156, 0.20);
+  box-shadow: 0 0 0 2px rgba(115, 200, 156, 0.20);
+}
+
+.ant-select-selector{
+  border-radius: $radius;
+}
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: $primary_hover;
+}
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: $primary_hover;
+  -webkit-box-shadow: 0 0 0 2px rgba(115, 200, 156, 0.20);
+  box-shadow: 0 0 0 2px rgba(115, 200, 156, 0.20);
+}
+.ant-select-dropdown {
+  border-radius: $radius;
+  padding: 6px 0;
+
+  .ant-select-item {
+    padding: 5px 16px;
+  }
+}
+
+.ant-form-item .ant-input-textarea-show-count::after {
+  margin-right: $radius;
+}
+
+.ant-upload-picture-card-wrapper {
+  margin-bottom: $radius;
+  
+  .ant-upload.ant-upload-select-picture-card {
+    border-radius: $radius;
+  
+    &:hover {
+      border-color: $primary_hover;
+    }
+  }
+
+  .ant-upload-list-picture-card .ant-upload-list-item {
+    border-radius: $radius;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+.ant-typography-edit {
+  color: $primary_color;
+
+  &:hover {
+    color: $primary_hover;
+  }
+}
+
+.ant-input-affix-wrapper:hover {
+  border-color: $primary_hover;
+}
+.ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused {
+  border-color: $primary_hover;
+  -webkit-box-shadow: 0 0 0 2px rgba(115, 200, 156, 0.20);
+  box-shadow: 0 0 0 2px rgba(115, 200, 156, 0.20);
+}

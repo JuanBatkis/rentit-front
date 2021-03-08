@@ -10,5 +10,6 @@ const _axios = axios.create({
 
 export const signupFn = user => _axios.post("/signup", user)
 export const loginFn = user => _axios.post("/login", user)
+export const LocationFn = location => _axios.patch("/location/change", location)
 export const logoutFn = _ => _axios.get("/logout")
 export const getCurrentUser = _ => _axios.get("/session")
