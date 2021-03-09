@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { useAuthInfo } from '../../hooks/authContext'
+import { LocationFn } from "../../services/auth"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import { Typography, Divider, Row, Col } from 'antd'
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
+import { Typography, Divider, Row, Col, Button, Space } from 'antd'
+import { CheckOutlined } from '@ant-design/icons';
 import { Gradient } from 'react-gradient'
 import DetailedRating from '../../components/DetailedRating'
 
@@ -18,19 +22,94 @@ const Info = () => {
   const [editablePhone, setEditablePhone] = useState(user.phone)
 
   const mapContainer = useRef()
-  const [lng, setLng] = useState(-70.9)
-  const [lat, setLat] = useState(42.35)
-  const [zoom, setZoom] = useState(9)
+  const [mapSaving, setMapSaving] = useState(false)
+  const [mapSavingIcon, setMapSavingIcon] = useState(false)
+  const [mapSavingText, setMapSavingText] = useState('Save location')
+  const [map, setMap] = useState(null)
+  const [lng, setLng] = useState(user.location ? user.location.coordinates[0] : -70.9)
+  const [lat, setLat] = useState(user.location ? user.location.coordinates[1] : 42.35)
+  const [mapMoved, setMapMoved] = useState(false)
 
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [lng, lat],
-      zoom: zoom
-    });
-    return () => map.remove();
-  }, [lng, lat, zoom])
+      zoom: 12
+    })
+
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+      marker: false,
+      flyTo: {
+        speed: 2
+      }
+    })
+
+    geocoder.on("result", ({ result }) => {
+      //setNewPlace(result) // name: text, center, place_name
+    })
+
+    map.addControl(geocoder)
+
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl())
+
+    const marker = new mapboxgl.Marker({
+      draggable: true
+    })
+        .setLngLat([lng, lat])
+        .addTo(map)
+
+    map.on('movestart', function(e) {
+      marker.setLngLat(map.getCenter())
+    })
+    
+    map.on('move', function(e) {
+      marker.setLngLat(map.getCenter())
+    })
+    
+    map.on('moveend', function(e) {
+      if (map.getCenter().lng.toFixed(4) !== lng.toFixed(4) || map.getCenter().lat.toFixed(4) !== lat.toFixed(4)) {
+        setMapMoved(true)
+      }
+      setMapSavingIcon(false)
+      setMapSavingText('Save location')
+      marker.setLngLat(map.getCenter())
+    })
+
+    map.on("load", () => {
+      setMap(map)
+    })
+
+    return () => map.remove()
+  }, [lng, lat])
+  
+  const returnToOriginalLocation = () => {
+    map.flyTo({
+      center: [lng, lat],
+      speed: 2,
+      essential: true // this animation is considered essential with respect to prefers-reduced-motion
+    })
+
+    setMapMoved(false)
+  }
+
+  const saveLocation = async () => {
+    mapContainer.current.style.pointerEvents = 'none'
+    mapContainer.current.style.opacity = 0.5
+    setMapSaving(true)
+    setMapSavingText('Saving location')
+    await LocationFn({lng: map.getCenter().lng, lat: map.getCenter().lat})
+    mapContainer.current.style.pointerEvents = 'all'
+    mapContainer.current.style.opacity = 1
+    setLng(map.getCenter().lng)
+    setLat(map.getCenter().lat)
+    setMapSaving(false)
+    setMapSavingIcon(<CheckOutlined />)
+    setMapSavingText('Saved location')
+  }
 
   return (
     <>
@@ -64,8 +143,16 @@ const Info = () => {
           <Title level={4}>Phone number:</Title>
           <Text editable={{ onChange: setEditablePhone }}>{editablePhone}</Text>
         </Col>
-        <Col span={12}>
+        <Col span={12} className="location-container">
           <div className="map-container" ref={mapContainer} style={{height: '500px'}} />
+          <Space className="location-buttons" style={mapMoved ? {opacity: 1, pointerEvents: 'all'} : {opacity: 0, pointerEvents: 'none'}}>
+            <Button type="primary" shape="round" size={'large'} loading={mapSaving} icon={mapSavingIcon} onClick={saveLocation}>
+              {mapSavingText}
+            </Button>
+            <Button danger shape="round" size={'large'} onClick={returnToOriginalLocation}>
+              Restore location
+            </Button>
+          </Space>
         </Col>
       </Row>
     </>
