@@ -7,6 +7,7 @@ import './index.scss'
 import './styles/home.scss'
 import './styles/auth.scss'
 import './styles/profile.scss'
+import './styles/products.scss'
 import { AuthProvider } from './hooks/authContext'
 
 ReactDOM.render(

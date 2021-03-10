@@ -47,16 +47,6 @@
       }
 
       .location-container {
-        .map-container {
-          border-radius: 20px;
-          margin-bottom: 20px;
-          transition: opacity .3s;
-  
-          .mapboxgl-canvas {
-            outline: none;
-          }
-        }
-
         .location-buttons {
           transition: opacity .3s;
         }

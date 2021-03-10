@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Profile from './pages/Profile'
+import Products from './pages/Products'
 
 function Router() {
   return (
@@ -16,6 +17,7 @@ function Router() {
           <LoggedOutRoute component={Signup} path='/signup'/>
           <LoggedOutRoute component={Login} path='/login'/>
           <PrivateRoute component={Profile} path='/profile'/>
+          <Route component={Products} path='/products'/>
         </Switch>
       </LayoutApp>
     </BrowserRouter>

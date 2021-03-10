@@ -9,7 +9,7 @@ const _axios = axios.create({
 })
 
 export const getAllProducts = limit => _axios.get(`/all/${limit}`)
-export const getProductsByCategory = category => _axios.get(`/category/${category}`)
+export const getProductsByQuery = query => _axios.post(`/query`, query)
 export const getProductById = productId => _axios.get(`/${productId}`)
 export const getUserProducts = (userId, limit) => _axios.get(`/user/${userId}/${limit}`)
 export const createProduct = product => _axios.post("/", product)

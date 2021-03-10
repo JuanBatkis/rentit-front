@@ -50,10 +50,12 @@ const CustomHeader = ({push}) => {
           visible={visibleDrawer}
           closeIcon={<PlusOutlined rotate={45} />}
         >
-          <Menu theme="light" defaultSelectedKeys={['2']}>
-            <Menu.Item key="1">nav 1</Menu.Item>
-            <Menu.Item key="2">nav 2</Menu.Item>
-            <Menu.Item key="3">nav 3</Menu.Item>
+          <Menu theme="light">
+            <Menu.Item key="1" onClick={closeDrawer}>
+              <Link to='/products'>Products</Link>
+            </Menu.Item>
+            <Menu.Item key="2" onClick={closeDrawer}>nav 2</Menu.Item>
+            <Menu.Item key="3" onClick={closeDrawer}>nav 3</Menu.Item>
           </Menu>
         </Drawer>
       </Col>

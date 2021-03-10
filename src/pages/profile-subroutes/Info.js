@@ -5,7 +5,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
-import { Typography, Divider, Row, Col, Button, Space } from 'antd'
+import { Typography, Divider, Row, Col, Button, Space, Alert } from 'antd'
 import { CheckOutlined } from '@ant-design/icons';
 import { Gradient } from 'react-gradient'
 import DetailedRating from '../../components/DetailedRating'
@@ -26,8 +26,8 @@ const Info = () => {
   const [mapSavingIcon, setMapSavingIcon] = useState(false)
   const [mapSavingText, setMapSavingText] = useState('Save location')
   const [map, setMap] = useState(null)
-  const [lng, setLng] = useState(user.location ? user.location.coordinates[0] : -70.9)
-  const [lat, setLat] = useState(user.location ? user.location.coordinates[1] : 42.35)
+  const [lng, setLng] = useState(user.location.coordinates ? user.location.coordinates[0] : -73.51822)
+  const [lat, setLat] = useState(user.location.coordinates ? user.location.coordinates[1] : 40.76127)
   const [mapMoved, setMapMoved] = useState(false)
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const Info = () => {
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [lng, lat],
-      zoom: 12
+      zoom: user.location.coordinates ? 12 : 4
     })
 
     const geocoder = new MapboxGeocoder({
@@ -47,17 +47,13 @@ const Info = () => {
       }
     })
 
-    geocoder.on("result", ({ result }) => {
-      //setNewPlace(result) // name: text, center, place_name
-    })
-
     map.addControl(geocoder)
 
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl())
 
     const marker = new mapboxgl.Marker({
-      draggable: true
+      draggable: false
     })
         .setLngLat([lng, lat])
         .addTo(map)
@@ -144,6 +140,7 @@ const Info = () => {
           <Text editable={{ onChange: setEditablePhone }}>{editablePhone}</Text>
         </Col>
         <Col span={12} className="location-container">
+          {!user.location.coordinates && <Alert message="You won't me able to create products without saving a location" type="warning" showIcon />}
           <div className="map-container" ref={mapContainer} style={{height: '500px'}} />
           <Space className="location-buttons" style={mapMoved ? {opacity: 1, pointerEvents: 'all'} : {opacity: 0, pointerEvents: 'none'}}>
             <Button type="primary" shape="round" size={'large'} loading={mapSaving} icon={mapSavingIcon} onClick={saveLocation}>

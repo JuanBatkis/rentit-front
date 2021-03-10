@@ -70,7 +70,6 @@ const Info = () => {
       key: '_id',
       align: 'center',
       render: prod => {
-        console.log(prod._id);
         return(
           <Space size="middle">
             <Button type="link" size={'large'}>
@@ -108,9 +107,15 @@ const Info = () => {
           >
             Products
           </Gradient>
-          <Button type="primary" icon={<PlusOutlined />} size={'large'} shape="round">
-            <Link to='/profile/products/add' style={{color: '#fff'}}>Add new</Link>
-          </Button>
+          {user.location.coordinates ? (
+            <Button type="primary" icon={<PlusOutlined />} size={'large'} shape="round">
+              <Link to='/profile/products/add' style={{color: '#fff'}}>Add new</Link>
+            </Button>
+          ) : (
+            <Button type="primary" disabled size={'large'} shape="round">
+              Save your location to add products
+            </Button>
+          )}
         </Space>
       </div>
       <Divider />

@@ -198,3 +198,18 @@ a, .ant-btn-link, .ant-typography a {
   -webkit-box-shadow: 0 0 0 2px rgba(115, 200, 156, 0.20);
   box-shadow: 0 0 0 2px rgba(115, 200, 156, 0.20);
 }
+
+.ant-alert {
+  border-radius: $radius;
+  margin-bottom: 10px;
+}
+
+.map-container {
+  border-radius: 20px;
+  margin-bottom: 20px;
+  transition: opacity .3s;
+
+  .mapboxgl-canvas {
+    outline: none;
+  }
+}

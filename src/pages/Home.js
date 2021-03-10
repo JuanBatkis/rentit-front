@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { getAllProducts } from '../services/products'
-import { Typography, Col, Row, Carousel, Button, Skeleton, Card } from 'antd'
+import ProductCard from '../components/ProductCard'
+import { Typography, Col, Row, Carousel, Button, Skeleton } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
-const { Meta } = Card
 
 const Home = () => {
   const [products, setProducts] = useState(null)
@@ -28,7 +28,6 @@ const Home = () => {
   useEffect(() => {
     async function getProducts() {
       const {data:products} = await getAllProducts(4)
-      console.log(products.products);
       setProducts(products.products)
     }
     getProducts()
@@ -69,14 +68,7 @@ const Home = () => {
       </section>
       <Row gutter={16} style={{padding: '20px'}} id='latest-prods'>
         {products ? products.map(product => (
-          <Col span={6}>
-            <Card
-              hoverable
-              cover={product.images[0] ? <img alt="product image" src={product.images[0]} style={{height:'320px', objectFit: 'contain', padding: '1px'}} /> : <Skeleton.Image style={{height:'320px', width:'100%'}}/>}
-            >
-              <Meta title={product.name} description={product.priceDay ? `$${product.priceHour}/hr or $${product.priceDay}/day` : `$${product.priceHour}/hr`} />
-            </Card>
-          </Col>
+          <ProductCard product={product} />
         )) : <Skeleton active />}
       </Row>
       {/* <Row align="middle">

@@ -80,11 +80,7 @@ const AddProduct = () => {
   }
 
   const handleDelete = (file) => {
-    console.log('hey');
-    console.log(file);
-    console.log(fileList);
     const newFileList = fileList.filter(image => image.uid !== file.uid)
-    console.log(newFileList);
     setFileList(newFileList)
   }
 
@@ -107,7 +103,6 @@ const AddProduct = () => {
 
   const onFinish = async (values) => {
     values.images = fileList.map(image => image.url)
-    console.log('Success:', values);
     try {
       await createProduct(values)
       notification['success']({
