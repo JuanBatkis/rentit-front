@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useAuthInfo } from '../../hooks/authContext'
-import { LocationFn } from "../../services/auth"
+import { LocationFn, getCurrentUser } from "../../services/auth"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
@@ -16,6 +16,7 @@ const { Title, Text } = Typography
 
 const Info = () => {
   const {user} = useAuthInfo()
+  const { setUser } = useAuthInfo()
   const [editableFirstName, setEditableFirstName] = useState(user.firstName)
   const [editableLasttName, setEditableLastName] = useState(user.lastName)
   const [editablestoreName, setEditablestoreName] = useState(user.storeName)
@@ -92,12 +93,20 @@ const Info = () => {
     setMapMoved(false)
   }
 
+  const getSession = async () => {
+    const { data } = await getCurrentUser()
+    if (data) {
+      setUser(data)
+    }
+  }
+
   const saveLocation = async () => {
     mapContainer.current.style.pointerEvents = 'none'
     mapContainer.current.style.opacity = 0.5
     setMapSaving(true)
     setMapSavingText('Saving location')
     await LocationFn({lng: map.getCenter().lng, lat: map.getCenter().lat})
+    getSession()
     mapContainer.current.style.pointerEvents = 'all'
     mapContainer.current.style.opacity = 1
     setLng(map.getCenter().lng)

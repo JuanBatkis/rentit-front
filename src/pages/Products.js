@@ -18,8 +18,8 @@ const Products = () => {
   const [receivedProducts, setReceivedProducts] = useState(null)
   const mapContainer = useRef()
   const [map, setMap] = useState(null)
-  const [lng, setLng] = useState(user && user.location.coordinates ? user.location.coordinates[0] : -70.9)
-  const [lat, setLat] = useState(user && user.location.coordinates ? user.location.coordinates[1] : 42.35)
+  const [lng, setLng] = useState(user && user.location.coordinates ? user.location.coordinates[0] : -58.401947)
+  const [lat, setLat] = useState(user && user.location.coordinates ? user.location.coordinates[1] : -34.595134)
   const [radius, setRadius] = useState(1)
   const [collapseOpen, setCollapseOpen] = useState(true)
   const [collapseText, setCollapseText] = useState(<h3>Colse map</h3>)
@@ -58,9 +58,9 @@ const Products = () => {
         speed: 2
       }
     })
-    
+
     map.addControl(geocoder)
-    
+
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl())
 
@@ -78,19 +78,19 @@ const Products = () => {
     const marker = new mapboxgl.Marker({
       draggable: false
     })
-        .setLngLat([lng, lat])
-        .addTo(map)
+      .setLngLat([lng, lat])
+      .addTo(map)
 
     map.on('movestart', function(e) {
       marker.setLngLat(map.getCenter())
       map.getSource('polygon').setData(createGeoJSONCircle([map.getCenter().lng, map.getCenter().lat], radius, false))
     })
-    
+
     map.on('move', function(e) {
       marker.setLngLat(map.getCenter())
       map.getSource('polygon').setData(createGeoJSONCircle([map.getCenter().lng, map.getCenter().lat], radius, false))
     })
-    
+
     map.on('moveend', function(e) {
       marker.setLngLat(map.getCenter())
       map.getSource('polygon').setData(createGeoJSONCircle([map.getCenter().lng, map.getCenter().lat], radius, false))
