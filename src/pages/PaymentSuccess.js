@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { verifyFn } from "../services/auth"
+import { useLocation, Link } from 'react-router-dom'
+import { updateRent } from "../services/rents"
 import { Col, Row, Button, Typography, Spin, notification } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
+import { LoadingOutlined, CheckOutlined } from '@ant-design/icons'
 import { Gradient } from 'react-gradient'
 
-const { Paragraph } = Typography;
+const { Paragraph, Title } = Typography;
 
 const antIcon = <LoadingOutlined style={{ fontSize: 40, color: '#5dbe8c' }} spin />
 
-const Activate = () => {
-  const { id } = useParams()
+const PaymentSuccess = () => {
   const [loading, setLoading] = useState(true)
-  const [userName, setUserName] = useState(null)
+  const [rent, setRent] = useState(null)
 
-  const verifyUser = async (userId) => {
+  const useQuery = () => new URLSearchParams(useLocation().search)
+  const preference_id = useQuery().get('preference_id')
+  
+  const updateGivenRent = async (preferenceId) => {
     try {
-      const { data } = await verifyFn({id: userId})
-      setUserName(data.firstName)
+      const { data } = await updateRent({preferenceId, status: 'in-progress'})
+      setRent(data)
       setLoading(false)
     } catch (error) {
       notification['error']({
@@ -32,14 +34,14 @@ const Activate = () => {
   }
 
   useEffect(() => {
-    verifyUser(id)
+    updateGivenRent(preference_id)
   }, [])
 
   return (
-    <Row justify="center" align="middle" className="main-row auth-cont">
+    <Row justify="center" align="middle" className="main-row auth-cont success-page">
       <Col xs={22} sm={18} md={14} lg={10} xl={8} xxl={6}>
         <div>
-          {loading ? (
+          {loading || !rent ? (
             <div style={{display: 'flex', justifyContent: 'center'}}>
               <Spin indicator={antIcon} />
             </div>
@@ -49,22 +51,23 @@ const Activate = () => {
                 gradients={[
                   ['#00a1ba', '#9cd873'],
                 ]}
-                property="text"
-                element="h1"
+                property="background"
+                element="span"
                 angle="45deg"
-                className="text ant-typography"
+                className="text ant-typography check-cont"
               >
-                Hello {userName}!
+                <CheckOutlined />
               </Gradient>
+              <Title level={2}>Thank you for your rent!</Title>
               <Paragraph>
-                Your account has been successfully activated!
+                Your rent for {rent.product.name} has successfully started!
               </Paragraph>
               <Paragraph>
-                You can now proceed to login and start taking advantage of every feature of our platform!
+                You can view more info in your profile page
               </Paragraph>
               <div style={{display: 'flex', justifyContent: 'center'}}>
                 <Button type="primary" size={'large'} shape="round" style={{height: 'auto', padding: '6px 30px'}}>
-                  <Link to='/login' style={{color: '#fff', fontSize: '1.5em'}}>Log in!</Link>
+                  <Link to='/profile/rents' style={{color: '#fff', fontSize: '1.5em'}}>More info</Link>
                 </Button>
               </div>
             </>
@@ -75,4 +78,4 @@ const Activate = () => {
   )
 }
 
-export default Activate
+export default PaymentSuccess

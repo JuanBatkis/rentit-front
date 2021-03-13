@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProductById } from '../services/products'
+import { getRentPreference, createRent } from '../services/rents'
 import { createQuestion } from '../services/questions'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -13,8 +14,14 @@ import DetailedRating from '../components/DetailedRating'
 const { Title, Text, Paragraph } = Typography;
 const { RangePicker } = DatePicker
 
+//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY
+mapboxgl.accessToken = 'pk.eyJ1IjoianVhbmJhdGtpcyIsImEiOiJja2xlMDJ1Y240ZHR1Mnd1aTVqOGIxdWpyIn0.GQOtc1ghwfAhcaavE_Z3yA'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
 const Product = () => {
   const { id } = useParams()
+  const buyButtonRef = useRef()
   const [product, setProduct] = useState(null)
   const [questions, setQuestions] = useState([])
   const [form] = Form.useForm()
@@ -22,8 +29,11 @@ const Product = () => {
   const [hoursDisabled, setHoursDisabled] = useState(false)
   const [daysDisabled, setDaysDisabled] = useState(false)
   const [time, setTime] = useState(null)
+  const [rentedFrom, setRentedFrom] = useState(null)
+  const [rentedTo, setRentedTo] = useState(null)
   const [total, setTotal] = useState(0)
   const [rentVisible, setRentVisible] = useState(false)
+  const [preferenceId, setPreferenceId] = useState(null)
 
   const mapContainer = useRef()
   const [lng, setLng] = useState(0)
@@ -31,13 +41,23 @@ const Product = () => {
 
   useEffect(() => {
     async function getProducts() {
-      const cleanId = id.split('-')[0]
-      const {data:product} = await getProductById(cleanId)
-      console.log(product)
-      setProduct(product)
-      setQuestions(product.questions.reverse())
-      setLng(product.owner.location.coordinates[0])
-      setLat(product.owner.location.coordinates[1])
+      try {
+        const cleanId = id.split('-')[0]
+        const {data:product} = await getProductById(cleanId)
+        setProduct(product)
+        setQuestions(product.questions.reverse())
+        setLng(product.owner.location.coordinates[0])
+        setLat(product.owner.location.coordinates[1])
+      } catch(error) {
+        notification['error']({
+          message: 'Something went wrong',
+          description: error.response.data.message,
+          duration: 5,
+          style: {
+            borderRadius: '20px'
+          }
+        })
+      }
     }
     getProducts()
   }, [])
@@ -112,10 +132,7 @@ const Product = () => {
     }
   }
 
-  function onChange(value, dateString, input) {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
-    console.log(input);
+  const onChange = (value, dateString, input) => {
     if (input === 'hours') {
       setHoursDisabled(false)
       setDaysDisabled(true)
@@ -135,27 +152,83 @@ const Product = () => {
     if (input === 'hours') {
       const currentTime = value[1].diff(value[0], 'hours') + 1
       setTime(currentTime)
+      setRentedFrom(value[0])
+      setRentedTo(value[1])
       setRentVisible(true)
       setTotal(currentTime * product.priceHour)
-      console.log(currentTime)
+      createPreference(product._id, product.name, currentTime * product.priceHour, currentTime > 1 ? `for ${currentTime} hours` : `for ${currentTime} hour`)
     } else {
       const currentTime = value[1].diff(value[0], 'days') + 1
       setTime(currentTime)
+      setRentedFrom(value[0])
+      setRentedTo(value[1])
       setRentVisible(true)
       setTotal(currentTime * product.priceDay)
-      console.log(currentTime)
+      createPreference(product._id, product.name, currentTime * product.priceDay, currentTime > 1 ? `for ${currentTime} days` : `for ${currentTime} day`)
     }
   }
+
+  const createPreference = async (productId, productName, total, time) => {
+    try {
+      const rentPreferenceInfo = { productId, productName, total, time }
+      const {data} = await getRentPreference(rentPreferenceInfo)
   
-  function onOk(value) {
-    console.log('onOk: ', value);
+      const script = document.createElement("script")
+      script.src = "https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js"
+      script.setAttribute("data-preference-id", data.preferenceId)
+      script.setAttribute("data-button-label", "Rent")
+  
+      setPreferenceId(data.preferenceId)
+  
+      if (buyButtonRef.current) {
+        buyButtonRef.current.innerHTML = ''
+        buyButtonRef.current.appendChild(script)
+      }
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: 'You must be logged in to continue with this rent',
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
   }
 
-  const test = () => {
-    console.log('test');
+  const clickedCreateRent = async () => {
+    try {
+      let type
+      if (!hoursDisabled) {
+        type = 'hour'
+      } else {
+        type = 'day'
+      }
+  
+      const rentInfo = {
+        product: product._id,
+        owner: product.owner._id,
+        total,
+        rentedFrom: rentedFrom.toDate(),
+        rentedTo: rentedTo.toDate(),
+        type,
+        preferenceId
+      }
+  
+      await createRent(rentInfo)
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
   }
 
-  function disabledDate(current) {
+  const disabledDate = (current) => {
     // Can not select days before today and today
     return current < moment().startOf('day');
   }
@@ -167,11 +240,9 @@ const Product = () => {
       owner: product.owner,
       description: question.question
     }
-    console.log(data)
     try {
       await createQuestion(data)
       setQuestions([data, ...questions])
-      console.log(questions)
       setQuestionLoading(false)
     } catch (error) {
       notification['error']({
@@ -193,7 +264,7 @@ const Product = () => {
           {product ? (
             <Carousel>
               {product.images.map(image =>(
-                <img alt="product image" src={image} className='slider-image' />
+                <img alt="product" src={image} className='slider-image' />
               ))}
             </Carousel>
           ) : (
@@ -204,9 +275,9 @@ const Product = () => {
           {product ? (
             <>
               <div className='product-breadcrumbs'>
-                <Tag><Link to='/products'>products</Link></Tag>
+                <Tag><Link to='/products/all'>products</Link></Tag>
                 <RightOutlined />
-                <Tag>{product.category}</Tag>
+                <Tag><Link to={`/products/${product.category}`}>{product.category}</Link></Tag>
               </div>
               <Gradient
                   gradients={[
@@ -228,7 +299,6 @@ const Product = () => {
                   showTime={{ format: 'HH' }}
                   format="YYYY/MM/DD HH:00"
                   onChange={(value, dateString) => onChange(value, dateString, 'hours')}
-                  onOk={onOk}
                   disabledDate={disabledDate}
                   disabled={hoursDisabled}
                 />
@@ -240,7 +310,6 @@ const Product = () => {
                     <RangePicker
                       format="YYYY/MM/DD"
                       onChange={(value, dateString) => onChange(value, dateString, 'days')}
-                      onOk={onOk}
                       disabledDate={disabledDate}
                       disabled={daysDisabled}
                     />
@@ -256,17 +325,7 @@ const Product = () => {
                         <Text>{time > 1 ? `(${time} days)` : `(${time} day)`}</Text>
                       )}
                     </div>
-                    <Gradient
-                      gradients={[
-                        ['#00a1ba', '#9cd873'],
-                      ]}
-                      property="background"
-                      element="button"
-                      angle="45deg"
-                      className="add-rent ant-btn ant-btn-primary ant-btn-round ant-btn-lg"
-                    >
-                      Rent
-                    </Gradient>
+                    <div ref={buyButtonRef} className='mp-bttn-container' onClick={clickedCreateRent}></div>
                   </>
                 ) : (
                   <Tooltip placement="topLeft" title={<span>Please select your time period for the rental</span>}>
@@ -297,9 +356,7 @@ const Product = () => {
         </Col>
         {product && (
           <Col span={20}>
-            <Divider
-              //style={{width: '95%', minWidth: '95%', margin: '24px auto'}}
-            />
+            <Divider />
             <Gradient
                 gradients={[
                   ['#00a1ba', '#9cd873'],
@@ -348,7 +405,6 @@ const Product = () => {
                   maxLength={1000}
                   showCount={true}
                   autoSize={{ minRows: 2, maxRows: 4 }}
-                  defaultValue='e'
                 />
               </Form.Item>
               <Button type='primary' htmlType='submit' size='large' shape="round" loading={questionLoading}>

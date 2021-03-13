@@ -9,6 +9,7 @@ import Activate from './pages/Activate'
 import Profile from './pages/Profile'
 import Products from './pages/Products'
 import Product from './pages/Product'
+import PaymentSuccess from './pages/PaymentSuccess'
 
 function Router() {
   return (
@@ -20,8 +21,9 @@ function Router() {
           <LoggedOutRoute component={Signup} path='/signup'/>
           <LoggedOutRoute component={Activate} path='/activate/:id'/>
           <PrivateRoute component={Profile} path='/profile'/>
-          <Route component={Products} path='/products'/>
+          <Route component={Products} path='/products/:category'/>
           <Route component={Product} path='/product/:id'/>
+          <Route component={PaymentSuccess} path='/success'/>
         </Switch>
       </LayoutApp>
     </BrowserRouter>

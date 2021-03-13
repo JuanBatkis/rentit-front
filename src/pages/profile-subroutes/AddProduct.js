@@ -36,47 +36,58 @@ const AddProduct = () => {
   const handleCancel = () => setPreviewVisible(false)
 
   const handleUpload = async file => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
-    if (!isJpgOrPng) {
-      return (notification['error']({
-        message: 'Something went wrong',
-        description: 'You can only upload a JPG/PNG/WEBP file!',
-        duration: 5,
-        style: {
-          borderRadius: '20px'
-        }
-      }))
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      return (notification['error']({
-        message: 'Something went wrong',
-        description: 'Image must smaller than 2MB!',
-        duration: 5,
-        style: {
-          borderRadius: '20px'
-        }
-      }))
-    }
-
-    const fdata = new FormData()
-    fdata.append("file", file)
-    const cloudinaryApi = "https://api.cloudinary.com/v1_1/djv6xyyqp/image/upload"
-    fdata.append("upload_preset", "rentit_product")
-    setLoading(true)
-    const { data } = await axios.post(cloudinaryApi, fdata)
-  
-    let newFileList = fileList
-    newFileList.push(
-      {
-        uid: data.asset_id,
-        name: data.original_filename,
-        status: 'done',
-        url: data.secure_url,
+    try {
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
+      if (!isJpgOrPng) {
+        return (notification['error']({
+          message: 'Something went wrong',
+          description: 'You can only upload a JPG/PNG/WEBP file!',
+          duration: 5,
+          style: {
+            borderRadius: '20px'
+          }
+        }))
       }
-    )
-    setFileList(newFileList)
-    setLoading(false)
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        return (notification['error']({
+          message: 'Something went wrong',
+          description: 'Image must smaller than 2MB!',
+          duration: 5,
+          style: {
+            borderRadius: '20px'
+          }
+        }))
+      }
+  
+      const fdata = new FormData()
+      fdata.append("file", file)
+      const cloudinaryApi = "https://api.cloudinary.com/v1_1/djv6xyyqp/image/upload"
+      fdata.append("upload_preset", "rentit_product")
+      setLoading(true)
+      const { data } = await axios.post(cloudinaryApi, fdata)
+    
+      let newFileList = fileList
+      newFileList.push(
+        {
+          uid: data.asset_id,
+          name: data.original_filename,
+          status: 'done',
+          url: data.secure_url,
+        }
+      )
+      setFileList(newFileList)
+      setLoading(false)
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
   }
 
   const handleDelete = (file) => {
@@ -85,13 +96,24 @@ const AddProduct = () => {
   }
 
   const handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+    try {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+  
+      setPreviewImage(file.url || file.preview)
+      setPreviewVisible(true)
+      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
     }
-
-    setPreviewImage(file.url || file.preview)
-    setPreviewVisible(true)
-    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
   }
 
   const uploadButton = (
@@ -126,17 +148,12 @@ const AddProduct = () => {
     }
   }
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  }
-
   return (
     <Form
       {...layout}
       name="basic"
       initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       layout='vertical'
     >
       <Form.Item
@@ -205,7 +222,6 @@ const AddProduct = () => {
       </Form.Item>
 
       <Upload
-        //action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture-card"
         fileList={fileList}
         beforeUpload={handleUpload}

@@ -1,3 +1,13 @@
 .ant-empty {
   width: 100%;
 }
+
+.store-container {
+  .filters-col{
+    padding-left: 16px;
+
+    .ant-btn.ant-btn-text {
+      display: block;
+    }
+  }
+}

@@ -253,3 +253,112 @@ a, .ant-btn-link, .ant-typography a {
 .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab {
   border-radius: 20px 20px 0 0;
 }
+
+.ant-btn-link:active {
+  color: $primary_color;
+}
+.ant-btn-link:hover, .ant-btn-link:focus {
+  color: $primary_hover;
+}
+
+.ant-modal-content {
+  border-radius: $radius;
+
+  .ant-btn {
+    border-radius: $radius;
+  }
+}
+
+.ant-table-filter-trigger.active {
+  color: $primary_color;
+}
+.ant-dropdown-menu-item-selected, .ant-dropdown-menu-submenu-title-selected, .ant-dropdown-menu-item-selected > a, .ant-dropdown-menu-submenu-title-selected > a{
+  color: rgba(0, 0, 0, 0.85);
+  background-color: #e2fcef;
+}
+.ant-radio-checked .ant-radio-inner, .ant-radio-wrapper:hover .ant-radio, .ant-radio:hover .ant-radio-inner, .ant-radio-input:focus + .ant-radio-inner {
+  border-color: $primary_color;
+}
+.ant-radio-inner::after{
+  background-color: $primary_color;
+}
+.ant-pagination-item-active {
+  border-color: $primary_color;
+}
+.ant-pagination-item-active a {
+  color: $primary_color;
+}
+.ant-menu-item a:hover {
+  color: $primary_color;
+}
+.ant-menu-item-selected a, .ant-menu-item-selected a:hover {
+  color: rgba(0, 0, 0, 0.85);
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected, .ant-menu-item:active, .ant-menu-submenu-title:active {
+  background-color: #e2fcef;
+}
+.ant-menu-item-group-title {
+  display: none;
+}
+
+.ant-slider-track {
+  background-color: $primary_hover;
+}
+.ant-slider:hover .ant-slider-track {
+  background-color: $primary_color;
+}
+.ant-slider-handle {
+  border-color: $primary_hover;
+}
+.ant-slider-handle.ant-tooltip-open {
+  border-color: $primary_color;
+}
+.ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open), .ant-slider-handle:focus {
+  border-color: $primary_color;
+}
+.ant-slider-handle:focus {
+  -webkit-box-shadow: 0 0 0 5px #5dbe8c3a;
+  box-shadow: 0 0 0 5px #5dbe8c3a;
+}
+.ant-typography-expand:active, .ant-typography-edit:active, .ant-typography-copy:active, .ant-typography-expand:focus, .ant-typography-edit:focus, .ant-typography-copy:focus, .ant-typography-expand:hover, .ant-typography-edit:hover, .ant-typography-copy:hover {
+  color: $primary_color;
+}
+
+.ant-pagination {
+  li {
+    border-radius: $radius;
+  }
+
+  button.ant-pagination-item-link {
+    border-radius: $radius;
+  }
+}
+.ant-pagination-item-active:focus, .ant-pagination-item-active:hover {
+  border-color: $primary_hover;
+}
+.ant-pagination-item-active:focus a, .ant-pagination-item-active:hover a {
+  color: $primary_hover;
+}
+
+.ant-popover-inner {
+  border-radius: $radius;
+}
+
+.ant-modal {
+  .ant-modal-content {
+    .ant-modal-footer {
+      .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+        color: $primary_hover;
+        border-color: $primary_hover;
+      }
+      .ant-btn-primary:hover, .ant-btn-primary:focus {
+        color: #fff;
+      }
+      .ant-btn-primary:active {
+        color: #fff;
+        background: $primary_hover;
+        border-color: $primary_hover;
+    }
+    }
+  }
+}

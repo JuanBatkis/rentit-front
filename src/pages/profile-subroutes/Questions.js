@@ -1,112 +1,192 @@
-import { Tabs, Table } from 'antd'
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { getUserQuestions, answerQuestion } from '../../services/questions'
+import { Table, Space, Skeleton, Button, Tabs, Modal, Input, notification } from 'antd'
+import { Gradient } from 'react-gradient'
 
 const { TabPane } = Tabs;
 
 const Questions = () => {
-  function callback(key) {
-    console.log(key);
+  const [questions, setQuestions] = useState(null)
+  const [tab, setTab] = useState('renter')
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [currentQuestionId, setCurrentQuestionId] = useState(null)
+  const [currentAnswer, setCurrentAnswer] = useState('')
+  const [confirmLoading, setConfirmLoading] = useState(false)
+
+  const getQuestions = async (role) => {
+    try {
+      setQuestions(null)
+      const {data} = await getUserQuestions(role)
+      setQuestions(data.questions)
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    getQuestions(tab)
+  }, [tab])
+
+  const callback = (key) => {
+    if (Number(key) === 1) {
+      setTab('renter')
+    } else {
+      setTab('owner')
+    }
+  }
+
+  const showModal = (id) => {
+    setIsModalVisible(true)
+    setCurrentQuestionId(id)
+  }
+
+  const handleOk = async () => {
+    try {
+      setConfirmLoading(true)
+      await answerQuestion(currentQuestionId, {answer: currentAnswer})
+      getQuestions(tab)
+      setCurrentQuestionId(null)
+      setCurrentAnswer('')
+      setConfirmLoading(false)
+      setIsModalVisible(false)
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+    setCurrentQuestionId(null)
+    setCurrentAnswer('')
+  }
+
+  const writeAnswer = ({ target: { value } }) => {
+    setCurrentAnswer(value)
+  }
+
+  const renderName = (value, row, index) => {
+    const slug = `${row.product._id}-${value.name.replace(/\s+/g, '-').toLowerCase()}`
+    return <Link to={`/product/${slug}`}>{value.name}</Link>
+  }
+
+  const renderAnswer = (value, row, index) => {
+    if (tab === 'owner') {
+      if (value) {
+        return value
+      } else {
+        return <Button type="link" onClick={() => showModal(row._id)}>Respond</Button>
+      }
+    } else {
+      if (value) {
+        return value
+      } else {
+        return '-'
+      }
+    }
   }
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
+      title: 'Status',
+      dataIndex: 'status',
+      render: status => status === 'answered' ? 'Answered' : 'Not answered',
       filters: [
         {
-          text: 'Joe',
-          value: 'Joe',
+          text: 'Answered',
+          value: 'answered',
         },
         {
-          text: 'Jim',
-          value: 'Jim',
-        },
-        {
-          text: 'Submenu',
-          value: 'Submenu',
-          children: [
-            {
-              text: 'Green',
-              value: 'Green',
-            },
-            {
-              text: 'Black',
-              value: 'Black',
-            },
-          ],
-        },
+          text: 'Not answered',
+          value: 'not-answered',
+        }
       ],
       // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      onFilter: (value, record) => record.name.indexOf(value) === 0,
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ['descend'],
+      // here is that finding the status started with `value`
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
+      filterMultiple: false
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      defaultSortOrder: 'descend',
-      sorter: (a, b) => a.age - b.age,
+      title: 'Product',
+      dataIndex: 'product',
+      key: 'product',
+      render: renderName,
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      filters: [
-        {
-          text: 'London',
-          value: 'London',
-        },
-        {
-          text: 'New York',
-          value: 'New York',
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => record.address.indexOf(value) === 0,
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ['descend', 'ascend'],
-    },
-  ];
-  
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
+      title: 'Question',
+      dataIndex: 'description',
+      key: 'description',
+      render: description => description,
     },
     {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
+      title: 'Answer',
+      dataIndex: 'answer',
+      key: 'answer',
+      render: renderAnswer,
     },
     {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-    {
-      key: '4',
-      name: 'Jim Red',
-      age: 32,
-      address: 'London No. 2 Lake Park',
-    },
-  ];
-  
-  function onChange(pagination, filters, sorter, extra) {
-    console.log('params', pagination, filters, sorter, extra);
-  }
+      title: tab === 'owner' ? 'User' : 'Owner',
+      dataIndex: tab === 'owner' ? 'user' : 'owner',
+      key: tab === 'owner' ? 'user' : 'owner',
+      render: user => tab === 'owner' ? user.firstName : (user.storeName ? user.storeName : user.firstName),
+    }
+  ]
 
   return (
-    <Tabs onChange={callback} type="card">
-      <TabPane tab="Asked by me" key="1">
-        <Table columns={columns} dataSource={data} onChange={onChange} />
-      </TabPane>
-      <TabPane tab="Asked to me" key="2">
-        Content of Tab Pane 2
-      </TabPane>
-    </Tabs>
+    <>
+      <div className='user-info-header'>
+        <Space size="middle">
+          <Gradient
+            gradients={[
+              ['#00a1ba', '#9cd873'],
+            ]}
+            property="text"
+            element="h1"
+            angle="45deg"
+            className="text ant-typography"
+          >
+            Questions
+          </Gradient>
+        </Space>
+      </div>
+      <Tabs onChange={callback} type="card" className='questions-table'>
+        <TabPane tab="Asked by me" key="1">
+          {questions ? <Table columns={columns} dataSource={questions} scroll={{ x: true }} /> : <Skeleton active />}
+        </TabPane>
+        <TabPane tab="Asked to me" key="2">
+          {questions ? <Table columns={columns} dataSource={questions} scroll={{ x: true }} /> : <Skeleton active />}
+          <Modal
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            closable={false}
+            confirmLoading={confirmLoading}
+          >
+            <Input.TextArea
+              value={currentAnswer}
+              onChange={writeAnswer}
+              maxLength={1000}
+              showCount={true}
+              autoSize={{ minRows: 2, maxRows: 4 }}
+            />
+          </Modal>
+        </TabPane>
+      </Tabs>
+    </>
   )
 }
 

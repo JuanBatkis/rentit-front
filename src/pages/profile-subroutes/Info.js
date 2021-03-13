@@ -1,16 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
 import { useAuthInfo } from '../../hooks/authContext'
-import { LocationFn, getCurrentUser } from "../../services/auth"
+import { InfoFn, LocationFn, getCurrentUser } from "../../services/auth"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
-import { Typography, Divider, Row, Col, Button, Space, Alert } from 'antd'
+import { Typography, Divider, Row, Col, Button, Space, Alert, notification } from 'antd'
 import { CheckOutlined } from '@ant-design/icons';
 import { Gradient } from 'react-gradient'
 import DetailedRating from '../../components/DetailedRating'
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY
+//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY
+mapboxgl.accessToken = 'pk.eyJ1IjoianVhbmJhdGtpcyIsImEiOiJja2xlMDJ1Y240ZHR1Mnd1aTVqOGIxdWpyIn0.GQOtc1ghwfAhcaavE_Z3yA'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 const { Title, Text } = Typography
 
@@ -19,7 +22,7 @@ const Info = () => {
   const { setUser } = useAuthInfo()
   const [editableFirstName, setEditableFirstName] = useState(user.firstName)
   const [editableLasttName, setEditableLastName] = useState(user.lastName)
-  const [editablestoreName, setEditablestoreName] = useState(user.storeName)
+  const [editableStoreName, setEditableStoreName] = useState(user.storeName)
   const [editablePhone, setEditablePhone] = useState(user.phone)
 
   const mapContainer = useRef()
@@ -30,6 +33,32 @@ const Info = () => {
   const [lng, setLng] = useState(user.location.coordinates ? user.location.coordinates[0] : -73.51822)
   const [lat, setLat] = useState(user.location.coordinates ? user.location.coordinates[1] : 40.76127)
   const [mapMoved, setMapMoved] = useState(false)
+
+  const updateInfo = async () => {
+    try {
+      const info = {
+        firstName: editableFirstName,
+        lastName: editableLasttName,
+        storeName: editableStoreName,
+        phone: editablePhone
+      }
+      await InfoFn(info)
+      getSession()
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    updateInfo()
+  }, [editableFirstName, editableLasttName, editableStoreName, editablePhone])
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -52,6 +81,17 @@ const Info = () => {
 
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl())
+
+    // Add geolocate control to the map.
+    map.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        },
+        showAccuracyCircle: false,
+        showUserLocation: false
+      })
+    )
 
     const marker = new mapboxgl.Marker({
       draggable: false
@@ -94,26 +134,48 @@ const Info = () => {
   }
 
   const getSession = async () => {
-    const { data } = await getCurrentUser()
-    if (data) {
-      setUser(data)
+    try {
+      const { data } = await getCurrentUser()
+      if (data) {
+        setUser(data)
+      }
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
     }
   }
 
   const saveLocation = async () => {
-    mapContainer.current.style.pointerEvents = 'none'
-    mapContainer.current.style.opacity = 0.5
-    setMapSaving(true)
-    setMapSavingText('Saving location')
-    await LocationFn({lng: map.getCenter().lng, lat: map.getCenter().lat})
-    getSession()
-    mapContainer.current.style.pointerEvents = 'all'
-    mapContainer.current.style.opacity = 1
-    setLng(map.getCenter().lng)
-    setLat(map.getCenter().lat)
-    setMapSaving(false)
-    setMapSavingIcon(<CheckOutlined />)
-    setMapSavingText('Saved location')
+    try {
+      mapContainer.current.style.pointerEvents = 'none'
+      mapContainer.current.style.opacity = 0.5
+      setMapSaving(true)
+      setMapSavingText('Saving location')
+      await LocationFn({lng: map.getCenter().lng, lat: map.getCenter().lat})
+      getSession()
+      mapContainer.current.style.pointerEvents = 'all'
+      mapContainer.current.style.opacity = 1
+      setLng(map.getCenter().lng)
+      setLat(map.getCenter().lat)
+      setMapSaving(false)
+      setMapSavingIcon(<CheckOutlined />)
+      setMapSavingText('Saved location')
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
   }
 
   return (
@@ -137,18 +199,18 @@ const Info = () => {
       </div>
       <Divider />
       <Row gutter={16}>
-        <Col span={12}>
+        <Col xs={10} md={12}>
           <Title level={2}>User info:</Title>
           <Title level={4}>First name:</Title>
           <Text editable={{ onChange: setEditableFirstName }}>{editableFirstName}</Text>
           <Title level={4}>Last name:</Title>
           <Text editable={{ onChange: setEditableLastName }}>{editableLasttName}</Text>
           <Title level={4}>Store name:</Title>
-          <Text editable={{ onChange: setEditablestoreName }}>{editablestoreName}</Text>
+          <Text editable={{ onChange: setEditableStoreName }}>{editableStoreName}</Text>
           <Title level={4}>Phone number:</Title>
           <Text editable={{ onChange: setEditablePhone }}>{editablePhone}</Text>
         </Col>
-        <Col span={12} className="location-container">
+        <Col xs={14} md={12} className="location-container">
           {!user.location.coordinates && <Alert message="You won't me able to create products without saving a location" type="warning" showIcon />}
           <div className="map-container" ref={mapContainer} style={{height: '500px'}} />
           <Space className="location-buttons" style={mapMoved ? {opacity: 1, pointerEvents: 'all'} : {opacity: 0, pointerEvents: 'none'}}>

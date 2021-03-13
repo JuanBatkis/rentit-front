@@ -49,11 +49,11 @@ const Login = () => {
                 <GoogleOutlined />
               </a>
             </Col>
-            <Col span={6} align="middle">
+            {/* <Col span={6} align="middle">
               <a href={process.env.NODE_ENV === "production" ? "/api/auth/facebook" : "http://localhost:3001/api/auth/facebook"}>
                 <FacebookOutlined />
               </a>
-            </Col>
+            </Col> */}
             <Col span={24} align="middle" className="changeAuth">
               <Text>
                 Don't have an account? <Link to='/signup'>Sign up here!</Link>

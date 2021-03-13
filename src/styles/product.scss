@@ -85,6 +85,25 @@
         border-radius: 20px;
       }
 
+      .mp-bttn-container {
+        display: inline-block;
+
+        .mercadopago-button {
+          background-image: linear-gradient(45deg, rgb(0, 161, 186), rgb(156, 216, 115));
+          margin-top: 20px;
+          display: block;
+          font-size: 1.8em;
+          height: unset;
+          line-height: 1.2;
+          padding: 6.4px 20px;
+          border-radius: 40px;
+          outline: 0;
+          font-weight: 400;
+          white-space: nowrap;
+          font-family: 'Montserrat', sans-serif;
+        }
+      }
+
       .add-rent {
         margin-top: 20px;
         display: block;
@@ -132,5 +151,23 @@
         margin-bottom: 12px;
       }
     }
+  }
+}
+
+.success-page {
+  .check-cont {
+    display: inline-block;
+    font-size: 4em;
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+    width: 80px;
+    height: 80px;
+    border-radius: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    margin: 0 auto 0.5em auto;
   }
 }

@@ -3,38 +3,62 @@ import { Link } from 'react-router-dom'
 import { useAuthInfo } from '../../hooks/authContext'
 import { getUserProducts } from '../../services/products'
 import { deleteProduct } from '../../services/products'
-import { Typography, Divider, Table, Space, Skeleton, Button, Tag, Popconfirm } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Table, Space, Skeleton, Button, Tag, Popconfirm, notification } from 'antd'
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import { Gradient } from 'react-gradient'
-import DetailedRating from '../../components/DetailedRating'
-
-const { Title, Text } = Typography
 
 const Info = () => {
   const {user} = useAuthInfo()
   const [products, setProducts] = useState(null)
 
   async function getProducts() {
-    const {data:products} = await getUserProducts(user._id, 20)
-    setProducts(products.products)
+    try {
+      const {data:products} = await getUserProducts(user._id, 20)
+      setProducts(products.products)
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
   }
 
   async function deleteProductAndReload(id) {
-    await deleteProduct(id)
-    const {data:products} = await getUserProducts(user._id, 20)
-    setProducts(products.products)
+    try {
+      await deleteProduct(id)
+      const {data:products} = await getUserProducts(user._id, 20)
+      setProducts(products.products)
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
   }
 
   useEffect(() => {
     getProducts()
   }, [])
 
+  const renderName = (value, row, index) => {
+    const slug = `${row._id}-${value.replace(/\s+/g, '-').toLowerCase()}`
+    return <Link to={`/product/${slug}`}>{value}</Link>
+  }
+
   const columns = [
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      render: text => <a>{text}</a>,
+      render: renderName,
     },
     {
       title: 'Price hour',
@@ -72,9 +96,9 @@ const Info = () => {
       render: prod => {
         return(
           <Space size="middle">
-            <Button type="link" size={'large'}>
+            {/* <Button type="link" size={'large'}>
               <EditOutlined />
-            </Button>
+            </Button> */}
             <Popconfirm
               title="Are you sure to delete this product?"
               placement="topRight"
@@ -118,8 +142,7 @@ const Info = () => {
           )}
         </Space>
       </div>
-      <Divider />
-      {products ? <Table dataSource={products} columns={columns} /> : <Skeleton active />}
+      {products ? <Table dataSource={products} columns={columns} scroll={{ x: true }} /> : <Skeleton active />}
     </>
   )
 }

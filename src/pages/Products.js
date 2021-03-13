@@ -1,20 +1,25 @@
 import { useState, useEffect, useRef } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import { useAuthInfo } from '../hooks/authContext'
-import { getAllProducts } from '../services/products'
 import { getProductsByQuery } from '../services/products'
 import ProductCard from '../components/ProductCard'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
-import { Collapse, Row, Col, Pagination, Skeleton, Empty, Slider } from 'antd'
+import { Collapse, Row, Col, Skeleton, Empty, Slider, Typography, Button, notification } from 'antd'
 
 const { Panel } = Collapse
+const { Title } = Typography
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY
+//mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_KEY
+mapboxgl.accessToken = 'pk.eyJ1IjoianVhbmJhdGtpcyIsImEiOiJja2xlMDJ1Y240ZHR1Mnd1aTVqOGIxdWpyIn0.GQOtc1ghwfAhcaavE_Z3yA'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 const Products = () => {
   const {user} = useAuthInfo()
+  const { category } = useParams()
   const [receivedProducts, setReceivedProducts] = useState(null)
   const mapContainer = useRef()
   const [map, setMap] = useState(null)
@@ -26,21 +31,32 @@ const Products = () => {
   const [loading, setLoading] = useState(false)
 
   async function getProducts(longitude, latitude, givenRadius) {
-    setLoading(true)
-    const query = {
-      limit: 30,
-      category: null,
-      center: [longitude, latitude],
-      radius: givenRadius
+    try {
+      setLoading(true)
+      const query = {
+        limit: 30,
+        category: category,
+        center: [longitude, latitude],
+        radius: givenRadius
+      }
+      const {data:products} = await getProductsByQuery(query)
+      setReceivedProducts(products.products)
+      setLoading(false)
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
     }
-    const {data:products} = await getProductsByQuery(query)
-    setReceivedProducts(products.products)
-    setLoading(false)
   }
 
   useEffect(() => {
     getProducts(lng, lat, radius)
-  }, [])
+  }, [category])
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -199,7 +215,7 @@ const Products = () => {
   }
 
   return (
-    <Row>
+    <Row className='store-container'>
       <Col span={24}>
         <Collapse defaultActiveKey={['1']} bordered={false} ghost onChange={changeCollapseState}>
           <Panel header={collapseText} key="1">
@@ -209,7 +225,8 @@ const Products = () => {
       </Col>
       <Col span={24}>
         <Row wrap={false}>
-          <Col flex="220px">
+          <Col flex="220px" className='filters-col'>
+            <Title level={3}>Radius</Title>
             <Slider
               min={0.5}
               max={20}
@@ -217,7 +234,15 @@ const Products = () => {
               onAfterChange={kmSliderSearch}
               value={radius}
               step={0.5}
+              tipFormatter={(value) => `${value}km`}
             />
+            <Title level={3}>Categories</Title>
+            <Button type='text'><Link to='/products/all'>All</Link></Button>
+            <Button type='text'><Link to='/products/tools'>Tools</Link></Button>
+            <Button type='text'><Link to='/products/technology'>Technology</Link></Button>
+            <Button type='text'><Link to='/products/vehicles'>Vehicles</Link></Button>
+            <Button type='text'><Link to='/products/sports'>Sports</Link></Button>
+            <Button type='text'><Link to='/products/other'>Other</Link></Button>
           </Col>
           <Col flex="auto">
             <Row gutter={[16, 16]} style={{padding: '20px'}} id='latest-prods'>
