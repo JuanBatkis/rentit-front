@@ -3,9 +3,17 @@
   background: rgb(0,161,186);
   background: linear-gradient(45deg, rgba(0,161,186,1) 0%, rgba(156,216,115,1) 100%);
 
-  h1 {
-    color: #fff;
-    font-size: 5em;
+  .banner-title {
+    h1 {
+      color: #fff;
+      font-size: 5em;
+    }
+
+    @media only screen and (max-width: 768px) {
+      z-index: 1;
+      margin-right: 8.33333333%;
+      padding: 0 8.33333333%;
+    }
   }
 
   .iframe-container {
@@ -19,6 +27,7 @@
       height: 100%;
       width: 100%;
       transition: opacity 2s;
+      transform: scale(1.15);
 
       @media only screen and (min-width: 1700px) {
         transform: scale(1.25);
@@ -31,6 +40,7 @@
     iframe {
       opacity: 0;
       transition: opacity 2s;
+      transform: scale(1.15);
 
       @media only screen and (min-width: 1700px) {
         transform: scale(1.25);
@@ -51,11 +61,61 @@
       background-color: #67c68b;
       box-shadow: -2px -6px 14px 0px #67c68b;
     } */
+
+    @media only screen and (max-width: 768px) {
+      position: absolute;
+      width: 100%;
+      opacity: 0.8;
+    }
   }
 }
 
-#latest-prods {
+#latest-products {
+  padding: 0 16px;
+  max-width: 1400px;
+  margin: 40px auto 0 auto;
+
+  h2.ant-typography {
+    display: inline-block;
+    font-size: 4em;
+    pointer-events: none;
+    user-select: none;
+  }
+
   .ant-skeleton-element {
     width: 100%;
+  }
+}
+
+#steps-cont {
+  padding: 0 16px;
+  max-width: 1400px;
+  margin: 60px auto;
+
+  h2.ant-typography {
+    display: inline-block;
+    font-size: 4em;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .steps{
+    color: #fff;
+    width: 80px;
+    height: 80px;
+    border-radius: 80px;
+    text-align: center;
+  }
+
+  .ant-typography {
+    font-size: 2em;
+    max-width: 90%;
+  }
+
+  .react-gradient.ant-btn {
+    font-size: 2.2em;
+    height: unset;
+    margin: 20px 0;
+    border: none;
   }
 }

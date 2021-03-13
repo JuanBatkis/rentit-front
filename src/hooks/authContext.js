@@ -36,17 +36,39 @@ export const AuthProvider = props => {
   }
 
   async function logout(push) {
-    push('/')
-    await logoutFn()
-    setUser(null)
+    try {
+      push('/')
+      await logoutFn()
+      setUser(null)
+    } catch (error) {
+      notification['error']({
+        message: 'Something went wrong',
+        description: error.response.data.message,
+        duration: 5,
+        style: {
+          borderRadius: '20px'
+        }
+      })
+    }
   }
 
   useEffect(() => {
     // preguntamos al backend si hay un user en sesion, de ser asi hacemos login de ese user
     async function getSession() {
-      const { data } = await getCurrentUser()
-      if (data) {
-        setUser(data)
+      try {
+        const { data } = await getCurrentUser()
+        if (data) {
+          setUser(data)
+        }
+      } catch (error) {
+        notification['error']({
+          message: 'Something went wrong',
+          description: error.response.data.message,
+          duration: 5,
+          style: {
+            borderRadius: '20px'
+          }
+        })
       }
     }
 
@@ -54,7 +76,7 @@ export const AuthProvider = props => {
   }, [setUser])
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, setUser }}>
       {props.children}
     </AuthContext.Provider>
   )

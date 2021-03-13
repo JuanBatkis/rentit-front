@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuthInfo } from '../hooks/authContext'
-import { Menu, Drawer, Button, Row, Col, Tooltip, Avatar, Popover, Modal, Input } from 'antd'
-import { MenuOutlined, PlusOutlined, ShoppingCartOutlined, UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
-
-const { Search } = Input;
+import { Menu, Drawer, Button, Row, Col, Tooltip, Avatar, Popover, Modal } from 'antd'
+import { MenuOutlined, PlusOutlined, UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { Gradient } from 'react-gradient'
 
 const CustomHeader = ({push}) => {
   const {user, logout} = useAuthInfo()
@@ -35,8 +34,6 @@ const CustomHeader = ({push}) => {
     })
   }
 
-  const onSearch = value => console.log(value)
-
   return (
     <Row justify="space-between"  align="middle">
       <Col span={4}>
@@ -50,10 +47,39 @@ const CustomHeader = ({push}) => {
           visible={visibleDrawer}
           closeIcon={<PlusOutlined rotate={45} />}
         >
-          <Menu theme="light" defaultSelectedKeys={['2']}>
-            <Menu.Item key="1">nav 1</Menu.Item>
-            <Menu.Item key="2">nav 2</Menu.Item>
-            <Menu.Item key="3">nav 3</Menu.Item>
+          <Gradient
+              gradients={[
+                ['#00a1ba', '#9cd873'],
+              ]}
+              property="text"
+              element="h2"
+              angle="45deg"
+              className="text ant-typography"
+              style={{display: 'inline-block', padding:'0 16px', pointerEvents: 'none', userSelect: 'none'}}
+            >
+              Store
+          </Gradient>
+          <Menu theme="light">
+            <Menu.Item key="1" onClick={closeDrawer}>
+              <Link to='/products/all'>Products</Link>
+            </Menu.Item>
+            <Menu.ItemGroup>
+              <Menu.Item key="2" onClick={closeDrawer}>
+                <Link to='/products/tools'>Tools</Link>
+              </Menu.Item>
+              <Menu.Item key="3" onClick={closeDrawer}>
+                <Link to='/products/technology'>Technology</Link>
+              </Menu.Item>
+              <Menu.Item key="4" onClick={closeDrawer}>
+                <Link to='/products/vehicles'>Vehicles</Link>
+              </Menu.Item>
+              <Menu.Item key="5" onClick={closeDrawer}>
+                <Link to='/products/sports'>Sports</Link>
+              </Menu.Item>
+              <Menu.Item key="6" onClick={closeDrawer}>
+                <Link to='/products/other'>Other</Link>
+              </Menu.Item>
+            </Menu.ItemGroup>
           </Menu>
         </Drawer>
       </Col>
@@ -66,13 +92,7 @@ const CustomHeader = ({push}) => {
           />
         </Link>
       </Col>
-      <Col span={4} align="right" style={{display: 'flex'}}>
-        {/* <Tooltip placement="bottom" title={'Cart'}>
-          <Link to='/cart'>
-            <ShoppingCartOutlined style={{fontSize: '1.6em', color: 'rgba(0, 0, 0, 0.85)', marginRight: '20px'}} />
-          </Link>
-        </Tooltip> */}
-        <Search placeholder="input search text" allowClear onSearch={onSearch} style={{ width: 'calc(100% - 32px)', paddingRight: '10px' }} />
+      <Col span={4} align="right">
         {user ? (
           <Popover 
             placement="bottomRight" 
@@ -100,7 +120,6 @@ const CustomHeader = ({push}) => {
             ) : (
               <Avatar
                 style={{
-                  background: 'rgb(0,161,186)',
                   background: 'linear-gradient(45deg, rgba(0,161,186,1) 0%, rgba(156,216,115,1) 100%)',
                   cursor: 'pointer'
                 }}
@@ -111,7 +130,7 @@ const CustomHeader = ({push}) => {
           </Popover>
         ) : (
           <Tooltip placement="bottom" title={'Login/Signup'}>
-            <Link to='/login' style={{display: 'flex', alignItems: 'center'}}>
+            <Link to='/login' style={{alignItems: 'center'}}>
               <UserOutlined style={{fontSize: '1.6em', color: 'rgba(0, 0, 0, 0.85)'}} />
             </Link>
           </Tooltip>

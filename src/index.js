@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom'
 import reportWebVitals from './reportWebVitals'
 import Router from './Router'
 import 'antd/dist/antd.css'
-import './index.css'
+import './index.scss'
 import './styles/home.scss'
 import './styles/auth.scss'
 import './styles/profile.scss'
+import './styles/products.scss'
+import './styles/product.scss'
 import { AuthProvider } from './hooks/authContext'
 
 ReactDOM.render(

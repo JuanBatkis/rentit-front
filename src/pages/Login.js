@@ -45,15 +45,15 @@ const Login = () => {
           <Divider id="socialDivider">Or connect with</Divider>
           <Row justify="center" align="middle" className="socialLogin">
             <Col span={6} align="middle">
-              <a href="http://localhost:3001/auth/google">
+              <a href={process.env.NODE_ENV === "production" ? "/api/auth/google" : "http://localhost:3001/api/auth/google"}>
                 <GoogleOutlined />
               </a>
             </Col>
-            <Col span={6} align="middle">
-              <a href="http://localhost:3001/auth/facebook">
+            {/* <Col span={6} align="middle">
+              <a href={process.env.NODE_ENV === "production" ? "/api/auth/facebook" : "http://localhost:3001/api/auth/facebook"}>
                 <FacebookOutlined />
               </a>
-            </Col>
+            </Col> */}
             <Col span={24} align="middle" className="changeAuth">
               <Text>
                 Don't have an account? <Link to='/signup'>Sign up here!</Link>

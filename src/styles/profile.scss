@@ -5,8 +5,28 @@
   .profile-cont {
     height: 100%;
 
-    .ant-avatar .ant-avatar-string {
-      font-size: 3em;
+    .avatar-container {
+      display: inline-block;
+      position: relative;
+
+      .ant-avatar .ant-avatar-string {
+        font-size: 3em;
+      }
+
+      .upload-cont {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+
+        .ant-btn:active {
+          color: #5dbe8c;
+          border-color: #5dbe8c;
+        }
+        .ant-btn:hover, .ant-btn:focus {
+          color: #73c89c;
+          border-color: #73c89c;
+        }
+      }
     }
 
     &.side-menu-cont {
@@ -15,6 +35,18 @@
 
         .ant-btn {
           margin-top: 0px;
+        }
+      }
+
+      @media only screen and (max-width: 768px) {
+        display: flex;
+        align-items: center;
+        padding: 30px;
+
+        .ant-list {
+          flex: 1;
+          margin-top: 0;
+          padding-left: 16px;
         }
       }
     }
@@ -44,6 +76,20 @@
 
       h2.ant-typography {
         margin-top: 0;
+      }
+
+      .location-container {
+        .location-buttons {
+          transition: opacity .3s;
+        }
+      }
+
+      .questions-table {
+        .ant-table-cell {
+          .ant-btn-link{
+            padding: 4px 0px;
+          }
+        }
       }
     }
   }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Redirect, useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { signupFn } from "../services/auth"
 import { Form, Col, Row, Button, Input, Divider, Typography, notification } from 'antd'
 import { Gradient } from 'react-gradient'
@@ -85,11 +85,15 @@ const Signup = () => {
           <Divider id="socialDivider">Or connect with</Divider>
           <Row justify="center" align="middle" className="socialLogin">
             <Col span={6} align="middle">
-              <GoogleOutlined />
+              <a href="/api/auth/google">
+                <GoogleOutlined />
+              </a>
             </Col>
-            <Col span={6} align="middle">
-              <FacebookOutlined />
-            </Col>
+            {/* <Col span={6} align="middle">
+              <a href="/api/auth/facebook">
+                <FacebookOutlined />
+              </a>
+            </Col> */}
             <Col span={24} align="middle" className="changeAuth">
               <Text>
                 Already have an account? <Link to='/login'>Log in here!</Link>

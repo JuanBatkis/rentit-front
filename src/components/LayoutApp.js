@@ -26,7 +26,7 @@ const LayoutApp = ({children}) => {
           {children}
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>RENTIT ©2020 Created by <a href="https://github.com/JuanBatkis" target="_blank">Juan Batkis <span style={{fontSize: '1.2em'}}>👋</span></a></Footer>
+      <Footer style={{ textAlign: 'center' }}>RENTIT ©2020 Created by <a href="https://github.com/JuanBatkis" target="_blank" rel="noreferrer">Juan Batkis <span style={{fontSize: '1.2em'}}>👋</span></a></Footer>
     </Layout>
   )
 }
