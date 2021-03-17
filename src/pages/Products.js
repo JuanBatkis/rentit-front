@@ -8,6 +8,8 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import { Collapse, Row, Col, Skeleton, Empty, Slider, Typography, Button, notification } from 'antd'
+import CustomSlider from '../components/CustomSlider' 
+import { useMapContext } from '../contexts/mapContext'
 
 const { Panel } = Collapse
 const { Title } = Typography
@@ -22,10 +24,12 @@ const Products = () => {
   const { category } = useParams()
   const [receivedProducts, setReceivedProducts] = useState(null)
   const mapContainer = useRef()
+  const { mapData, updateValue } = useMapContext()
+  const { lat, lng, radius } = mapData
   const [map, setMap] = useState(null)
-  const [lng, setLng] = useState(user && user.location.coordinates ? user.location.coordinates[0] : -58.401947)
-  const [lat, setLat] = useState(user && user.location.coordinates ? user.location.coordinates[1] : -34.595134)
-  const [radius, setRadius] = useState(1)
+/*   const [lng, setLng] = useState(user && user.location.coordinates ? user.location.coordinates[0] : -58.401947) */
+/*   const [lat, setLat] = useState(user && user.location.coordinates ? user.location.coordinates[1] : -34.595134) */
+  /* const [radius, setRadius] = useState(1) */
   const [collapseOpen, setCollapseOpen] = useState(true)
   const [collapseText, setCollapseText] = useState(<h3>Colse map</h3>)
   const [loading, setLoading] = useState(false)
@@ -55,17 +59,25 @@ const Products = () => {
   }
 
   useEffect(() => {
-    getProducts(lng, lat, radius)
-  }, [category])
-
-  useEffect(() => {
-    const map = new mapboxgl.Map({
+    updateValue({
+      lat: user && user.location.coordinates ? user.location.coordinates[1] : -34.595134,
+      lng: user && user.location.coordinates ? user.location.coordinates[0] : -58.401947
+    })
+    setMap(new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [lng, lat],
       zoom: 12
-    })
+    }))
+  }, [])
 
+  useEffect(() => {
+    getProducts(lng, lat, radius)
+  }, [category])
+
+
+  useEffect(() => {
+    if (!map) return;
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
@@ -108,15 +120,16 @@ const Products = () => {
     })
 
     map.on('moveend', function(e) {
+      console.log({radius})
       marker.setLngLat(map.getCenter())
       map.getSource('polygon').setData(createGeoJSONCircle([map.getCenter().lng, map.getCenter().lat], radius, false))
-      getProducts(map.getCenter().lng, map.getCenter().lat, radius)
+   /*    getProducts(map.getCenter().lng, map.getCenter().lat, radius) */
       updateLocation(map.getCenter().lng, map.getCenter().lat)
-      setMap(map)
+     /*  setMap(map) */
     })
 
     map.on("load", () => {
-      setMap(map)
+     /*  setMap(map) */
     })
 
     map.on('load', function () {
@@ -134,7 +147,7 @@ const Products = () => {
       })
     })
     return () => map.remove()
-  }, [])
+  }, [map])
   //[lng, lat, radius]
 
   const createGeoJSONCircle = (center, radiusInKm, isFirstDraw, points) => {
@@ -199,19 +212,24 @@ const Products = () => {
     }
   }
 
-  const updateLocation = (longitude, latitude) => {
-    setLng(longitude)
-    setLat(latitude)
+  const updateLocation = (lng, lat) => {
+   /*  updateValue({
+      lat, lng
+    }) */
+  /*   setLng(longitude)
+    setLat(latitude) */
   }
 
   const kmSliderRadius = value => {
-    setRadius(value)
-    map.getSource('polygon').setData(createGeoJSONCircle([map.getCenter().lng, map.getCenter().lat], value, false))
+  /*   setRadius(value) */
+    updateValue({ radius: value })
+    map.getSource('polygon').setData(createGeoJSONCircle([map.getCenter().lng, map.getCenter().lat], radius, false))
   }
 
   const kmSliderSearch = value => {
-    setRadius(value)
-    getProducts(lng, lat, value)
+   /*  setRadius(value) */
+    updateValue({ radius: value })
+    getProducts(lng, lat, radius)
   }
 
   return (

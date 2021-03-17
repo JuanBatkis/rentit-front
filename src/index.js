@@ -10,11 +10,14 @@ import './styles/profile.scss'
 import './styles/products.scss'
 import './styles/product.scss'
 import { AuthProvider } from './hooks/authContext'
+import { MapProvider } from './contexts/mapContext'
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-      <Router />
+      <MapProvider>
+        <Router />
+      </MapProvider>
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
